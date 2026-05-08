@@ -11,6 +11,7 @@ This is useful when you run multiple OpenCode sessions at the same time. If sess
 - Suppresses notifications only when the matching OpenCode window is focused.
 - Still notifies when you are in another Ghostty tab/window, another OpenCode session, or any other app.
 - Uses the OpenCode session title and latest prompt/response in the notification.
+- Automatically disables itself outside Ghostty, so it does not duplicate terminal-specific plugins such as Warp integrations.
 - Uses macOS `osascript`; no extra dependency required.
 
 ## Requirements
@@ -58,13 +59,18 @@ export OPENCODE_GHOSTTY_APP_NAME="Ghostty"
 export OPENCODE_GHOSTTY_PROCESS_NAME="ghostty"
 export OPENCODE_GHOSTTY_TITLE_PREFIX="OC | "
 export OPENCODE_NOTIFICATION_TITLE_PREFIX="opencode finished"
+export OPENCODE_GHOSTTY_NOTIFICATIONS_FORCE="0"
 ```
 
 Defaults are shown above.
 
+By default, the plugin only runs when OpenCode was launched from Ghostty. Set `OPENCODE_GHOSTTY_NOTIFICATIONS_FORCE=1` to bypass that guard for testing.
+
 ## How It Works
 
 The plugin listens for OpenCode `session.idle` events. When a session finishes, it fetches the session title and recent messages using the OpenCode client API.
+
+At startup, it checks Ghostty-specific environment variables such as `TERM_PROGRAM=ghostty` and `GHOSTTY_RESOURCES_DIR`. If OpenCode is running in another terminal, the plugin returns without installing hooks.
 
 It then asks macOS which app is frontmost and reads Ghostty's front window title. The expected Ghostty title is built from `OPENCODE_GHOSTTY_TITLE_PREFIX` plus the OpenCode session title.
 

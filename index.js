@@ -11,6 +11,11 @@ const extractTextFromParts = (parts = []) => {
 }
 
 export const GhosttyNotificationsPlugin = async ({ $, client }) => {
+  const forceEnabled = process.env.OPENCODE_GHOSTTY_NOTIFICATIONS_FORCE === "1"
+  const isGhostty = process.env.TERM_PROGRAM === "ghostty" || Boolean(process.env.GHOSTTY_RESOURCES_DIR)
+
+  if (!forceEnabled && (!isGhostty || process.env.WARP_CLI_AGENT_PROTOCOL_VERSION)) return {}
+
   const terminalAppName = process.env.OPENCODE_GHOSTTY_APP_NAME || "Ghostty"
   const terminalProcessName = process.env.OPENCODE_GHOSTTY_PROCESS_NAME || "ghostty"
   const windowTitlePrefix = process.env.OPENCODE_GHOSTTY_TITLE_PREFIX || "OC | "
