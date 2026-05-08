@@ -77,7 +77,7 @@ if (frontApp is terminalAppName or frontApp is terminalProcessName) and (activeT
 end if
 
 if shouldNotify then
-  display notification notificationBody with title notificationTitle subtitle targetWindowTitle
+  display notification notificationBody with title notificationTitle
 end if
 
 end run
