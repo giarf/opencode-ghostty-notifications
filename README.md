@@ -1,12 +1,15 @@
 # opencode-ghostty-notifications
 
-OpenCode plugin for macOS + Ghostty that sends a system notification when an OpenCode session finishes, but only when you are not focused on that exact OpenCode Ghostty window.
+OpenCode plugin for macOS + Ghostty that sends a system notification when an OpenCode session finishes, while suppressing notifications only for the exact Ghostty window that owns that session.
+
+This is useful when you run multiple OpenCode sessions at the same time. If session A finishes while you are focused on session B, you still get notified for session A.
 
 ## Features
 
 - Notifies on OpenCode `session.idle`.
-- Suppresses notifications when the matching Ghostty OpenCode window is focused.
-- Still notifies when you are in another Ghostty tab/window, another OpenCode session, Zen Browser, or any other app.
+- Matches the finished OpenCode session against the active Ghostty window title.
+- Suppresses notifications only when the matching OpenCode window is focused.
+- Still notifies when you are in another Ghostty tab/window, another OpenCode session, or any other app.
 - Uses the OpenCode session title and latest prompt/response in the notification.
 - Uses macOS `osascript`; no extra dependency required.
 
@@ -63,7 +66,9 @@ Defaults are shown above.
 
 The plugin listens for OpenCode `session.idle` events. When a session finishes, it fetches the session title and recent messages using the OpenCode client API.
 
-It then asks macOS which app is frontmost and reads Ghostty's front window title. If the focused Ghostty window matches the session that just finished, it does nothing. Otherwise it sends a macOS notification.
+It then asks macOS which app is frontmost and reads Ghostty's front window title. The expected Ghostty title is built from `OPENCODE_GHOSTTY_TITLE_PREFIX` plus the OpenCode session title.
+
+If the focused Ghostty window matches the session that just finished, it does nothing. If another OpenCode session or another Ghostty window is focused, it sends a macOS notification.
 
 ## Permissions
 
