@@ -58,7 +58,6 @@ You can customize behavior with environment variables:
 export OPENCODE_GHOSTTY_APP_NAME="Ghostty"
 export OPENCODE_GHOSTTY_PROCESS_NAME="ghostty"
 export OPENCODE_GHOSTTY_TITLE_PREFIX="OC | "
-export OPENCODE_NOTIFICATION_TITLE_PREFIX="opencode finished"
 export OPENCODE_GHOSTTY_NOTIFICATIONS_FORCE="0"
 ```
 
@@ -69,6 +68,13 @@ By default, the plugin only runs when OpenCode was launched from Ghostty. Set `O
 ## How It Works
 
 The plugin listens for OpenCode `session.idle` events. When a session finishes, it fetches the session title and recent messages using the OpenCode client API.
+
+Notifications use the same concise shape as terminal-native agent notifications:
+
+```text
+'<latest prompt>' finished
+Latest output: <latest assistant output>
+```
 
 At startup, it checks Ghostty-specific environment variables such as `TERM_PROGRAM=ghostty` and `GHOSTTY_RESOURCES_DIR`. If OpenCode is running in another terminal, the plugin returns without installing hooks.
 

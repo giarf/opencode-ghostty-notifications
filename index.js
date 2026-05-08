@@ -19,7 +19,6 @@ export const GhosttyNotificationsPlugin = async ({ $, client }) => {
   const terminalAppName = process.env.OPENCODE_GHOSTTY_APP_NAME || "Ghostty"
   const terminalProcessName = process.env.OPENCODE_GHOSTTY_PROCESS_NAME || "ghostty"
   const windowTitlePrefix = process.env.OPENCODE_GHOSTTY_TITLE_PREFIX || "OC | "
-  const notificationTitlePrefix = process.env.OPENCODE_NOTIFICATION_TITLE_PREFIX || "opencode finished"
 
   return {
     event: async ({ event }) => {
@@ -84,8 +83,8 @@ end if
 end run
 `
 
-      const title = prompt ? `${notificationTitlePrefix}: ${prompt}` : notificationTitlePrefix
-      const body = response || "Response ready"
+      const title = prompt ? `'${prompt}' finished` : "opencode finished"
+      const body = response ? `Latest output: ${response}` : "Latest output: Response ready"
 
       await $`osascript -e ${script} ${title} ${body} ${sessionTitle} ${terminalAppName} ${terminalProcessName} ${windowTitlePrefix}`
     },
